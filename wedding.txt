@@ -1,0 +1,619 @@
+mysql> create database wedding_management;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use database wedding_management;
+ERROR 1049 (42000): Unknown database 'database'
+mysql> use wedding_management;
+Database changed
+mysql> CREATE TABLE Customers(
+    ->     customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     customer_name VARCHAR(100),
+    ->     phone VARCHAR(15),
+    ->     email VARCHAR(100),
+    ->     address VARCHAR(200)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE Venues(
+    ->     venue_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     venue_name VARCHAR(100),
+    ->     city VARCHAR(50),
+    ->     capacity INT,
+    ->     rent_per_day DECIMAL(10,2),
+    ->     venue_type VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE Weddings(
+    ->     wedding_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     customer_id INT,
+    ->     venue_id INT,
+    ->     wedding_date DATE,
+    ->     wedding_theme VARCHAR(100),
+    ->     guest_count INT,
+    ->     budget DECIMAL(12,2),
+    ->     status VARCHAR(30),
+    ->     FOREIGN KEY(customer_id) REFERENCES Customers(customer_id),
+    ->     FOREIGN KEY(venue_id) REFERENCES Venues(venue_id)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> CREATE TABLE Guests(
+    ->     guest_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     wedding_id INT,
+    ->     guest_name VARCHAR(100),
+    ->     phone VARCHAR(15),
+    ->     rsvp_status VARCHAR(10),
+    ->     no_of_persons INT,
+    ->     FOREIGN KEY(wedding_id) REFERENCES Weddings(wedding_id)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> CREATE TABLE Payments(
+    ->     payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     wedding_id INT,
+    ->     amount DECIMAL(10,2),
+    ->     payment_date DATE,
+    ->     payment_mode VARCHAR(30),
+    ->     description VARCHAR(100),
+    ->     FOREIGN KEY(wedding_id) REFERENCES Weddings(wedding_id)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CREATE TABLE Invitations(
+    ->     invitation_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     wedding_id INT,
+    ->     sent_date DATE,
+    ->     method VARCHAR(20),
+    ->     status VARCHAR(20),
+    ->     FOREIGN KEY(wedding_id) REFERENCES Weddings(wedding_id)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql>
+mysql> CREATE TABLE Caterers(
+    ->     caterer_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     caterer_name VARCHAR(100),
+    ->     cuisine_type VARCHAR(50),
+    ->     phone VARCHAR(15),
+    ->     rating DECIMAL(2,1)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE Decorators(
+    ->     decorator_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     decorator_name VARCHAR(100),
+    ->     service_type VARCHAR(50),
+    ->     phone VARCHAR(15),
+    ->     rating DECIMAL(2,1)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE Photographers(
+    ->     photographer_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     photographer_name VARCHAR(100),
+    ->     service_type VARCHAR(50),
+    ->     phone VARCHAR(15),
+    ->     rating DECIMAL(2,1)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE Makeup_Artists(
+    ->     makeup_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     artist_name VARCHAR(100),
+    ->     phone VARCHAR(15),
+    ->     rating DECIMAL(2,1)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> CREATE TABLE Music_Bands(
+    ->     band_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     band_name VARCHAR(100),
+    ->     music_type VARCHAR(50),
+    ->     phone VARCHAR(15),
+    ->     rating DECIMAL(2,1)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE Wedding_Caterers(
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     wedding_id INT,
+    ->     caterer_id INT,
+    ->     package_details VARCHAR(100),
+    ->     cost DECIMAL(10,2),
+    ->     FOREIGN KEY(wedding_id) REFERENCES Weddings(wedding_id),
+    ->     FOREIGN KEY(caterer_id) REFERENCES Caterers(caterer_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> CREATE TABLE Wedding_Decorators(
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     wedding_id INT,
+    ->     decorator_id INT,
+    ->     package_details VARCHAR(100),
+    ->     cost DECIMAL(10,2),
+    ->     FOREIGN KEY(wedding_id) REFERENCES Weddings(wedding_id),
+    ->     FOREIGN KEY(decorator_id) REFERENCES Decorators(decorator_id)
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql>
+mysql>
+mysql> CREATE TABLE Wedding_Photographers(
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     wedding_id INT,
+    ->     photographer_id INT,
+    ->     package_details VARCHAR(100),
+    ->     cost DECIMAL(10,2),
+    ->     FOREIGN KEY(wedding_id) REFERENCES Weddings(wedding_id),
+    ->     FOREIGN KEY(photographer_id) REFERENCES Photographers(photographer_id)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql>
+mysql> CREATE TABLE Wedding_Makeup(
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     wedding_id INT,
+    ->     makeup_id INT,
+    ->     package_details VARCHAR(100),
+    ->     cost DECIMAL(10,2),
+    ->     FOREIGN KEY(wedding_id) REFERENCES Weddings(wedding_id),
+    ->     FOREIGN KEY(makeup_id) REFERENCES Makeup_Artists(makeup_id)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql>
+mysql> CREATE TABLE Wedding_Music_Bands(
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     wedding_id INT,
+    ->     band_id INT,
+    ->     package_details VARCHAR(100),
+    ->     cost DECIMAL(10,2),
+    ->     FOREIGN KEY(wedding_id) REFERENCES Weddings(wedding_id),
+    ->     FOREIGN KEY(band_id) REFERENCES Music_Bands(band_id)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql>
+mysql> INSERT INTO Customers(customer_name,phone,email,address) VALUES
+    -> ('Rahul Sharma','9876543210','rahul@gmail.com','Hyderabad'),
+    -> ('Priya Reddy','9123456789','priya@gmail.com','Bangalore'),
+    -> ('Amit Kumar','9988776655','amit@gmail.com','Chennai');
+Query OK, 3 rows affected (0.05 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Venues(venue_name,city,capacity,rent_per_day,venue_type) VALUES
+    -> ('Royal Palace','Hyderabad',500,150000,'Banquet'),
+    -> ('Green Garden','Bangalore',800,200000,'Lawn'),
+    -> ('Lake View Resort','Chennai',1000,300000,'Resort');\
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Weddings(customer_id,venue_id,wedding_date,wedding_theme,guest_count,budget,status) VALUES
+    -> (1,1,'2026-12-10','Royal',400,1200000,'Confirmed'),
+    -> (2,2,'2026-11-15','Traditional',600,1800000,'Confirmed'),
+    -> (3,3,'2026-10-20','Beach',700,2200000,'Planning');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Guests(wedding_id,guest_name,phone,rsvp_status,no_of_persons) VALUES
+    -> (1,'Ramesh','9000000001','Yes',4),
+    -> (1,'Suresh','9000000002','No',2),
+    -> (2,'Anita','9000000003','Yes',3);
+Query OK, 3 rows affected (0.05 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Payments(wedding_id,amount,payment_date,payment_mode,description) VALUES
+    -> (1,500000,'2026-09-01','UPI','Advance'),
+    -> (2,800000,'2026-09-05','Card','Advance'),
+    -> (3,1000000,'2026-09-10','Cash','Advance');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Invitations(wedding_id,sent_date,method,status) VALUES
+    -> (1,'2026-10-01','Email','Sent'),
+    -> (2,'2026-10-05','Print','Pending'),
+    -> (3,'2026-10-08','Email','Sent');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Caterers(caterer_name,cuisine_type,phone,rating) VALUES
+    -> ('Taste Caterers','South Indian','9876500001',4.8),
+    -> ('Food World','North Indian','9876500002',4.6);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Decorators(decorator_name,service_type,phone,rating) VALUES
+    -> ('Dream Decor','Floral','9876500003',4.9),
+    -> ('Elite Decor','Luxury','9876500004',4.7);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Photographers(photographer_name,service_type,phone,rating) VALUES
+    -> ('Pixel Studio','Candid','9876500005',4.9),
+    -> ('Moments Photography','Traditional','9876500006',4.8);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Makeup_Artists(artist_name,phone,rating) VALUES
+    -> ('Anjali Makeup','9876500007',4.8),
+    -> ('Bridal Glow','9876500008',4.7);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Music_Bands(band_name,music_type,phone,rating) VALUES
+    -> ('Melody Band','Live','9876500009',4.9),
+    -> ('DJ Beats','DJ','9876500010',4.6);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Wedding_Caterers(wedding_id,caterer_id,package_details,cost) VALUES
+    -> (1,1,'Premium Buffet',250000),
+    -> (2,2,'Deluxe Package',300000);
+Query OK, 2 rows affected (0.05 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Wedding_Decorators(wedding_id,decorator_id,package_details,cost) VALUES
+    -> (1,1,'Royal Decoration',180000),
+    -> (2,2,'Luxury Decoration',250000);
+Query OK, 2 rows affected (0.05 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Wedding_Photographers(wedding_id,photographer_id,package_details,cost) VALUES
+    -> (1,1,'Full Day Shoot',120000),
+    -> (2,2,'Premium Shoot',150000);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Wedding_Makeup(wedding_id,makeup_id,package_details,cost) VALUES
+    -> (1,1,'Bride Package',50000),
+    -> (2,2,'Premium Package',70000);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Wedding_Music_Bands(wedding_id,band_id,package_details,cost) VALUES
+    -> (1,1,'Live Orchestra',80000),
+    -> (2,2,'DJ Night',60000);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> -- Display all customers.
+mysql> SELECT * FROM Customers;
++-------------+---------------+------------+-----------------+-----------+
+| customer_id | customer_name | phone      | email           | address   |
++-------------+---------------+------------+-----------------+-----------+
+|           1 | Rahul Sharma  | 9876543210 | rahul@gmail.com | Hyderabad |
+|           2 | Priya Reddy   | 9123456789 | priya@gmail.com | Bangalore |
+|           3 | Amit Kumar    | 9988776655 | amit@gmail.com  | Chennai   |
++-------------+---------------+------------+-----------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> -- Display all venues in Hyderabad.
+mysql> Display all venues in Hyderabad.
+    -> ^C
+mysql> SELECT venue_name, city
+    -> FROM Venues
+    -> WHERE city='Hyderabad';
++--------------+-----------+
+| venue_name   | city      |
++--------------+-----------+
+| Royal Palace | Hyderabad |
++--------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> -- Find weddings with a budget greater than 500000.
+mysql> SELECT wedding_id, wedding_theme, budget
+    -> FROM Weddings
+    -> WHERE budget > 500000;
++------------+---------------+------------+
+| wedding_id | wedding_theme | budget     |
++------------+---------------+------------+
+|          1 | Royal         | 1200000.00 |
+|          2 | Traditional   | 1800000.00 |
+|          3 | Beach         | 2200000.00 |
++------------+---------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> -- Display guests who confirmed RSVP.
+mysql> SELECT guest_name
+    -> FROM Guests
+    -> WHERE rsvp_status='Yes';
++------------+
+| guest_name |
++------------+
+| Ramesh     |
+| Anita      |
++------------+
+2 rows in set (0.00 sec)
+
+mysql> -- Find photographers with rating above 4.
+mysql> SELECT photographer_name, rating
+    -> FROM Photographers
+    -> WHERE rating > 4;
++---------------------+--------+
+| photographer_name   | rating |
++---------------------+--------+
+| Pixel Studio        |    4.9 |
+| Moments Photography |    4.8 |
++---------------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> -- Display caterers serving South Indian cuisine.
+mysql> SELECT caterer_name
+    -> FROM Caterers
+    -> WHERE cuisine_type='South Indian';
++----------------+
+| caterer_name   |
++----------------+
+| Taste Caterers |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> Find venues having capacity greater than 500.
+    -> -- Find venues having capacity greater than 500.
+    -> ^C
+mysql> SELECT venue_name, capacity
+    -> FROM Venues
+    -> WHERE capacity > 500;
++------------------+----------+
+| venue_name       | capacity |
++------------------+----------+
+| Green Garden     |      800 |
+| Lake View Resort |     1000 |
++------------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> --
+mysql> -- Display all invitations sent through Email.
+mysql> SELECT invitation_id, sent_date
+    -> FROM Invitations
+    -> WHERE method='Email';
++---------------+------------+
+| invitation_id | sent_date  |
++---------------+------------+
+|             1 | 2026-10-01 |
+|             3 | 2026-10-08 |
++---------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> -- Count total weddings.
+mysql> SELECT COUNT(*) AS total_weddings
+    -> FROM Weddings;
++----------------+
+| total_weddings |
++----------------+
+|              3 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> -- Find average wedding budget.
+mysql> SELECT AVG(budget) AS average_budget
+    -> FROM Weddings;
++----------------+
+| average_budget |
++----------------+
+| 1733333.333333 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> -- Count weddings conducted in each city.
+mysql> SELECT v.city,
+    -> COUNT(w.wedding_id) AS total_weddings
+    -> FROM Weddings w
+    -> JOIN Venues v
+    -> ON w.venue_id=v.venue_id
+    -> GROUP BY v.city;
++-----------+----------------+
+| city      | total_weddings |
++-----------+----------------+
+| Hyderabad |              1 |
+| Bangalore |              1 |
+| Chennai   |              1 |
++-----------+----------------+
+3 rows in set (0.01 sec)
+
+mysql> -- Find highest and lowest venue rent.
+mysql> SELECT
+    -> MAX(rent_per_day) AS highest_rent,
+    -> MIN(rent_per_day) AS lowest_rent
+    -> FROM Venues;
++--------------+-------------+
+| highest_rent | lowest_rent |
++--------------+-------------+
+|    300000.00 |   150000.00 |
++--------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> -- Count guests for each wedding.
+mysql> Count guests for each wedding.
+    -> ^C
+mysql> SELECT wedding_id,
+    -> COUNT(guest_id) AS total_guests
+    -> FROM Guests
+    -> GROUP BY wedding_id;
++------------+--------------+
+| wedding_id | total_guests |
++------------+--------------+
+|          1 |            2 |
+|          2 |            1 |
++------------+--------------+
+2 rows in set (0.00 sec)
+
+mysql> -- Find total payment received.
+mysql> SELECT SUM(amount) AS total_payment
+    -> FROM Payments;
++---------------+
+| total_payment |
++---------------+
+|    2300000.00 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> -- Display number of weddings planned by each customer.
+mysql> SELECT customer_id,
+    -> COUNT(wedding_id) AS total_weddings
+    -> FROM Weddings
+    -> GROUP BY customer_id;
++-------------+----------------+
+| customer_id | total_weddings |
++-------------+----------------+
+|           1 |              1 |
+|           2 |              1 |
+|           3 |              1 |
++-------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> -- Find average photographer rating.
+mysql> Find average photographer rating.
+    -> ^C
+mysql> SELECT AVG(rating) AS average_rating
+    -> FROM Photographers;
++----------------+
+| average_rating |
++----------------+
+|        4.85000 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> -- Display customer names along with wedding themes.
+mysql> SELECT c.customer_name,
+    -> w.wedding_theme
+    -> FROM Customers c
+    -> JOIN Weddings w
+    -> ON c.customer_id=w.customer_id;
++---------------+---------------+
+| customer_name | wedding_theme |
++---------------+---------------+
+| Rahul Sharma  | Royal         |
+| Priya Reddy   | Traditional   |
+| Amit Kumar    | Beach         |
++---------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> -- Find venue names along with wedding dates.
+mysql> SELECT
+    -> v.venue_name,
+    -> w.wedding_date
+    -> FROM Weddings w
+    -> JOIN Venues v
+    -> ON w.venue_id=v.venue_id;
++------------------+--------------+
+| venue_name       | wedding_date |
++------------------+--------------+
+| Royal Palace     | 2026-12-10   |
+| Green Garden     | 2026-11-15   |
+| Lake View Resort | 2026-10-20   |
++------------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> -- Display wedding theme with total payment.
+mysql> SELECT
+    -> w.wedding_theme,
+    -> SUM(p.amount) AS total_payment
+    -> FROM Weddings w
+    -> JOIN Payments p
+    -> ON w.wedding_id=p.wedding_id
+    -> GROUP BY w.wedding_theme;
++---------------+---------------+
+| wedding_theme | total_payment |
++---------------+---------------+
+| Royal         |     500000.00 |
+| Traditional   |     800000.00 |
+| Beach         |    1000000.00 |
++---------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> -- Find customers having more than one wedding.
+mysql> SELECT
+    -> c.customer_name,
+    -> COUNT(w.wedding_id) AS total_weddings
+    -> FROM Customers c
+    -> JOIN Weddings w
+    -> ON c.customer_id=w.customer_id
+    -> GROUP BY c.customer_name
+    -> HAVING COUNT(w.wedding_id)>1;
+Empty set (0.01 sec)
+
+mysql> -- Display venues hosting more than two weddings.
+mysql> SELECT
+    -> v.venue_name,
+    -> COUNT(w.wedding_id) AS total_events
+    -> FROM Venues v
+    -> JOIN Weddings w
+    -> ON v.venue_id=w.venue_id
+    -> GROUP BY v.venue_name
+    -> HAVING COUNT(w.wedding_id)>2;
+Empty set (0.00 sec)
+
+mysql> -- Find weddings with guest count above average.
+mysql> SELECT wedding_id,
+    -> guest_count
+    -> FROM Weddings
+    -> WHERE guest_count>
+    -> (
+    -> SELECT AVG(guest_count)
+    -> FROM Weddings
+    -> );
++------------+-------------+
+| wedding_id | guest_count |
++------------+-------------+
+|          2 |         600 |
+|          3 |         700 |
++------------+-------------+
+2 rows in set (0.01 sec)
+
+mysql> -- Find total catering cost for each wedding.
+mysql> SELECT
+    -> wedding_id,
+    -> SUM(cost) AS catering_cost
+    -> FROM Wedding_Caterers
+    -> GROUP BY wedding_id;
++------------+---------------+
+| wedding_id | catering_cost |
++------------+---------------+
+|          1 |     250000.00 |
+|          2 |     300000.00 |
++------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> -- Find total decoration cost for each wedding.
+mysql> SELECT
+    -> wedding_id,
+    -> SUM(cost) AS decoration_cost
+    -> FROM Wedding_Decorators
+    -> GROUP BY wedding_id;
++------------+-----------------+
+| wedding_id | decoration_cost |
++------------+-----------------+
+|          1 |       180000.00 |
+|          2 |       250000.00 |
++------------+-----------------+
+2 rows in set (0.00 sec)
+
+mysql> -- Find total photography cost for each wedding.
+mysql> SELECT
+    -> wedding_id,
+    -> SUM(cost) AS photography_cost
+    -> FROM Wedding_Photographers
+    -> GROUP BY wedding_id;
++------------+------------------+
+| wedding_id | photography_cost |
++------------+------------------+
+|          1 |        120000.00 |
+|          2 |        150000.00 |
++------------+------------------+
+2 rows in set (0.00 sec)
+
+mysql> -- Find weddings whose payment exceeds ₹10,00,000.
+mysql> SELECT
+    -> w.wedding_theme,
+    -> SUM(p.amount) total_amount
+    -> FROM Weddings w
+    -> JOIN Payments p
+    -> ON w.wedding_id=p.wedding_id
+    -> GROUP BY w.wedding_theme
+    -> HAVING total_amount>1000000;
+Empty set (0.00 sec)
